@@ -1,0 +1,6 @@
+v.getVars().setBoolean("NMZ_START", true);
+v.getVars().setBoolean("DRINKING_OVERLOAD", false);
+v.getVars().setBoolean("DRINKING_PRAYER", false);
+v.getVars().setBoolean("EATING_ROCK", false);
+v.getVars().setBoolean("DRINKING_ABSORB", false);
+v.getVars().setBoolean("ROUND_START",true);
