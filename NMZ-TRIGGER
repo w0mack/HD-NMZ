@@ -1,0 +1,164 @@
+int selection = 0; //0=OVERLOAD/ABS 1= PRAYER POTS
+
+
+private void sleepWithCatch(int millis) {
+    try {
+        v.sleep(millis);
+    } catch (Exception e) {
+        log.info(e.toString());
+    }
+}
+
+
+if (client.getLocalPlayer().getWorldLocation().getX() == 2608 
+    && client.getLocalPlayer().getWorldLocation().getY() == 3115 
+    && client.getLocalPlayer().getWorldLocation().getPlane() == 0) {
+
+    sleepWithCatch(5000);  // 5 sekunnin viive
+
+   
+    v.invoke("Dream","<col=ffff00>Dominic Onion",v.getNpc().find(1120).getIndex(), 11, 0, 0, false);
+    sleepWithCatch(1000);  // 1 second delay after invoking
+
+    v.invoke("Continue", "", 0, 30, 4, 14352385, false);
+    sleepWithCatch(1000);  // 1 sekunnin viive 
+
+    v.invoke("Continue", "", 0, 30, -1, 15138821, false);    
+    sleepWithCatch(1000);  // 1 sekunnin viive   
+
+    v.invoke("Continue", "", 0, 30, 1, 14352385, false);   
+    sleepWithCatch(1000);  // 1 sekunnin viive 
+
+
+ 
+    v.getWalking().walk(2608, 3094);
+    sleepWithCatch(10000);  // 1 sekunnin viive 
+    
+    v.getBank().open();
+    sleepWithCatch(1500);  // 1 sekunnin viive 
+
+   v.getBank().depositAll();
+    sleepWithCatch(1000);  // 1 sekunnin viive 
+if (selection == 0 ) {
+
+    v.getBank().withdraw(7510, 1);  // Withdraw 1 of item ID 7510
+    sleepWithCatch(1000);  // 1 sekunnin viive 
+
+    v.getBank().withdraw(11734, 27);  // Withdraw 17 of item ID 11734
+    sleepWithCatch(1000);  // 1 sekunnin viive 
+
+    v.getBank().withdraw(11730, 0);  // Withdraw 10 of item ID 11730
+    sleepWithCatch(1000);  // 1 sekunnin viive 
+}
+
+if (selection == 1 ) {
+
+    v.getBank().withdraw(7510, 1);  // Withdraw 1 of item ID 7510
+    sleepWithCatch(1000);  // 1 sekunnin viive 
+		v.getBank().withdraw(2434, 27); //prayer pot 4
+		sleepWithCatch(1000);  // 1 sekunnin viive 
+    v.getBank().withdraw(139, 27);  // prayer pot 3 Withdraw 10 of item ID 11730
+    sleepWithCatch(1000);  // 1 sekunnin viive 
+    v.getBank().withdraw(141, 27);  // prayer pot 2 Withdraw 10 of item ID 11730
+    sleepWithCatch(1000); 
+    v.getBank().withdraw(143, 27);  // prayer pot 1 Withdraw 10 of item ID 11730
+    sleepWithCatch(1000); 
+}
+
+    
+    v.getWalking().walk(2605, 3116);
+    sleepWithCatch(13000);  // 10 sekunnin viive
+  
+   
+int potionX = v.getGameObject().find(26291).getSceneMinLocation().getX();
+int potionY = v.getGameObject().find(26291).getSceneMinLocation().getY();
+
+
+v.invoke("Drink", "<col=ffff><col=ff9040>Potion", 26291, 3, potionX, potionY, false);
+
+    sleepWithCatch(1000);
+    v.invoke("Continue", "", 0, 30, -1, 8454150, false);
+    sleepWithCatch(2000);   // 2 sekunnin viive
+
+} else {
+    
+    if (v.getVars().getBoolean("NMZ_START") && client.getLocalPlayer().getWorldLocation().getPlane() > 0 && Arrays.equals(client.getMapRegions(), new int[]{9033})) {
+        
+     if (selection == 0 ){   
+    int absorptionPoints = client.getVarbitValue(Varbits.NMZ_ABSORPTION);
+    int overloadValue = client.getVarbitValue(3955);
+    int health = client.getBoostedSkillLevel(Skill.HITPOINTS);
+
+    log.info("Current Absorption Points: " + absorptionPoints);
+
+    // Drink absorption potions until 1000 points at the start of the round
+    if (v.getVars().getBoolean("ROUND_START") && absorptionPoints < 1000) {
+        log.info("Start of round: Drinking absorption potions to reach 1000 points");
+        while (absorptionPoints < 1000 && v.getInventory().hasPotion(Potion.ABSORPTION)) {
+            log.info("Drinking absorption potion...");
+            v.getInventory().pot(Potion.ABSORPTION);
+            sleepWithCatch(1000); // Wait for the action to complete
+            absorptionPoints = client.getVarbitValue(Varbits.NMZ_ABSORPTION); // Update points
+        }
+        log.info("Finished drinking absorption potions at round start");
+        v.getVars().setBoolean("ROUND_START", false);
+    }
+
+    // Refill absorption points if below 300
+    if (absorptionPoints < 300 && v.getInventory().hasPotion(Potion.ABSORPTION)) {
+        log.info("Refilling absorption points: Current points are below 300");
+        while (absorptionPoints < 1000 && v.getInventory().hasPotion(Potion.ABSORPTION)) {
+            log.info("Drinking absorption potion...");
+            v.getInventory().pot(Potion.ABSORPTION);
+            sleepWithCatch(1000); // Wait for the action to complete
+            absorptionPoints = client.getVarbitValue(Varbits.NMZ_ABSORPTION); // Update points
+        }
+        log.info("Finished refilling absorption points");
+    }
+
+    // Handle overload logic
+    if (overloadValue == 0 && v.getInventory().hasPotion(Potion.OVERLOAD)) {
+        if (!v.getVars().getBoolean("DRINKING_OVERLOAD")) {
+            log.info("Drinking overload potion...");
+            v.getVars().setBoolean("DRINKING_OVERLOAD", true);
+            v.getInventory().pot(Potion.OVERLOAD);
+            v.getCallbacks().afterTicks(10, () -> {
+                log.info("[END] Drinking overload");
+                v.getVars().setBoolean("DRINKING_OVERLOAD", false);
+            });
+        }
+    }
+
+    // Guzzle rock cake if health > 1
+    if (health > 1 && !v.getVars().getBoolean("DRINKING_OVERLOAD")) {
+        log.info("Guzzling rock cake...");
+        v.invoke("Guzzle", "<col=ff9040>Dwarven rock cake</col>", 4, 57, 0, 9764864, false);
+    }
+	}
+    
+  	if (selection == 1) {
+		
+		v.getPrayer().prayOn(Prayer.PROTECT_FROM_MELEE);
+    int prayerPoint = client.getBoostedSkillLevel(Skill.PRAYER);
+    int health = client.getBoostedSkillLevel(Skill.HITPOINTS);
+
+    if (prayerPoint <= 10) {
+        if (!v.getVars().getBoolean("DRINKING_PRAYER")) {
+            log.info("DRINKING c");
+            v.getVars().setBoolean("DRINKING_PRAYER", true);
+            v.getInventory().pot(Potion.PRAYER_POTION);
+            v.getCallbacks().afterTicks(10, () -> {
+                log.info("[END] DRINKING PRAYER");
+                v.getVars().setBoolean("DRINKING_PRAYER", false);
+            });
+        }
+    } else {
+        if (health > 1 && !v.getVars().getBoolean("DRINKING_PRAYER")) {
+        	log.info("GUZZLING ROCK CAKE");
+            v.invoke("Guzzle", "<col=ff9040>Dwarven rock cake</col>", 4, 57, 0, 9764864, false);
+        
+        } 
+    	}
+  	}
+	}
+}
