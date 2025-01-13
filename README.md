@@ -56,14 +56,14 @@ Set the `selection` variable in the code to toggle between different modes:
 ### Setup
 1. Create a new preset and call it `NMZ START`.
 - COPY/PASTE the `NMZ START` script that is provided.
-![preset](https://imgur.com/IP6psAB)
+![preset](https://i.imgur.com/IP6psAB.png)
 2. Create a new trigger and call it `NMZ TRIG`.
 - COPY/PASTE the `NMZ-TRIGGER` script that is provided.
 3. Create another trigger and call it `Reset`.
 - COPY/PASTE the `Round-Reset` script that is provided.
 4. MAKE SURE YOUR DWARVEN ROCK CAKE AND POTIONS ARE STORED IN THE BANK BEFORE STARTING THE SCRIPT!!!
 5. Start the script in this EXACT SPOT.
-![starting](https://imgur.com/6mEfGTF)
+![starting](https://i.imgur.com/6mEfGTF.png)
 6. Sit back and relax.
 
 ## Known Issues
